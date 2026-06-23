@@ -1,0 +1,464 @@
+<!-- 
+ RDBMS->NoSQL:---
+ 
+ database  ->database 
+ table->collection
+ column->field
+ row->documents
+ 
+ 
+ mongosh default localhost:- 27017
+ change the mongosh localhost:-- mongosh "mongodb://192.168.1.100:27018"
+ 
+
+D:\Riya_FSD>mongod --version
+db version v6.0.8
+Build Info: {
+"version": "6.0.8",
+"gitVersion": "3d84c0dd4e5d99be0d69003652313e7eaf4cdd74",
+"modules": [],
+"allocator": "tcmalloc",
+"environment": {
+"distmod": "windows",
+"distarch": "x86_64",
+"target_arch": "x86_64"
+}
+}
+
+D:\Riya_FSD>mongosh
+Current Mongosh Log ID: 6a3a285913af8e781a03e27d
+Connecting to: mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.3
+Using MongoDB: 6.0.8
+Using Mongosh: 1.10.3
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+The server generated these startup warnings when booting
+2026-06-23T11:37:26.674+05:30: Access control is not enabled for the database. Read and write access to data and
+configuration is unrestricted
+------
+
+test> use mydb
+switched to db mydb
+mydb> db
+mydb
+mydb> show collections
+LJ
+people
+product
+std
+stdnt
+student
+Student
+mydb> db.createCollection("student")
+MongoServerError: Collection mydb.student already exists.
+mydb> db.createCollection("Riya_student")
+{ ok: 1 }
+mydb> db.student.drop()
+true
+db.dropDatabase():-- drop the database
+
+mydb> db.Riya_student.insertOne({name:"n1",rollno:14})
+{
+acknowledged: true,
+insertedId: ObjectId("6a3a2a5513af8e781a03e27e")
+}
+
+mydb> db.Riya_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 }
+]
+mydb> db.Riya_student.insertMany([{name:"n2",age:21},{name:"n3",age:20}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId("6a3a2b8a13af8e781a03e27f"),
+'1': ObjectId("6a3a2b8a13af8e781a03e280")
+}
+}
+mydb> db.Riya_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 }
+]
+mydb> db.Riya_student.insertMany([{name:"n2",status:"active"},{name:"n3",city:"A'bad"}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId("6a3a2c1513af8e781a03e281"),
+'1': ObjectId("6a3a2c1513af8e781a03e282")
+}
+}
+mydb> db.Riya_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n2',
+status: 'active'
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+mydb> db.Riya_student.renameCollection("R_student")
+{ ok: 1 }
+mydb> show collections
+LJ
+people
+product
+R_student
+std
+stdnt
+Student
+mydb> db.R_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n2',
+status: 'active'
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+
+db.R_student.find(query|filter|condition,projection)
+
+mydb> db.R_student.find({name:"n1"})
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 }
+]
+mydb> db.R_student.find({},{name:"1}))
+Uncaught:
+SyntaxError: Unterminated string constant. (1:27)
+
+> 1 | db.R_student.find({},{name:"1}))
+| ^
+2 |
+
+mydb> db.R_student.find({},{name:1})
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1' },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2' },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3' },
+{ _id: ObjectId("6a3a2c1513af8e781a03e281"), name: 'n2' },
+{ _id: ObjectId("6a3a2c1513af8e781a03e282"), name: 'n3' }
+]
+mydb> db.R_student.find({},{name:0})
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), age: 20 },
+{ _id: ObjectId("6a3a2c1513af8e781a03e281"), status: 'active' },
+{ _id: ObjectId("6a3a2c1513af8e781a03e282"), city: "A'bad" }
+]
+mydb> db.R_student.find({},{_id:0name:1})
+Uncaught:
+SyntaxError: Identifier directly after number. (1:28)
+
+> 1 | db.R_student.find({},{_id:0name:1})
+| ^
+2 |
+
+mydb> db.R_student.find({},{_id:0,name:1})
+[
+{ name: 'n1' },
+{ name: 'n2' },
+{ name: 'n3' },
+{ name: 'n2' },
+{ name: 'n3' }
+]
+
+mydb> db.R_student.find({},{city:0})
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n2',
+status: 'active'
+},
+{ _id: ObjectId("6a3a2c1513af8e781a03e282"), name: 'n3' }
+]
+mydb> db.R_student.find({name:"n1"},{_id:0,age:false})
+[ { name: 'n1', rollno: 14 } ]
+mydb> db.R_student.findOne()
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 }
+mydb> db.R_student.findOne({name:"n1"})
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 }
+mydb> db.R_student.find().limit(2)
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n2', age: 21 }
+]
+
+mydb> db.R_student.find().limit(1)
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 }
+]
+mydb> db.R_student.find().limit(1).skip(2)
+[ { _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 } ]
+mydb> db.R_student.find().limit(2).skip(2)
+[
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n2',
+status: 'active'
+}
+]
+
+mydb> db.R_student.updateOne({name:"n2"},{$set:{name:"n5"}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.R_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n2',
+status: 'active'
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+mydb> db.R_student.updateOne({name:"n2"},{$set:{name:"n5",age:30}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.R_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n3', age: 20 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+mydb> db.R_student.updateOne({name:"n3"},{$set:{name:"n6",age:30}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.R_student.find()
+[
+{ _id: ObjectId("6a3a2a5513af8e781a03e27e"), name: 'n1', rollno: 14 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n6', age: 30 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+mydb> db.R_student.updateMany({name:"n1"},{$set:{age:30}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.R_student.find()
+[
+{
+_id: ObjectId("6a3a2a5513af8e781a03e27e"),
+name: 'n1',
+rollno: 14,
+age: 30
+},
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n6', age: 30 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+}
+]
+
+mydb> db.R_student.upsert({name:"n2"},{$set:{name:
+...
+...
+mydb> mydb> db.R_student.upsert({name:"n2"},{$set:{name:
+mydb> db.R_student.updateOne({name:"n2"},{$set:{name:"xyz",age:32},{upsert:true})
+Uncaught:
+SyntaxError: Unexpected token (1:61)
+
+> 1 | db.R_student.updateOne({name:"n2"},{$set:{name:"xyz",age:32},{upsert:true})
+| ^
+2 |
+
+mydb> db.R_student.updateOne({name:"n2"},{$set:{name:"xyz",age:32}},{upsert:true})
+{
+acknowledged: true,
+insertedId: ObjectId("6a3a33bdab4bd85d7a2e3e37"),
+matchedCount: 0,
+modifiedCount: 0,
+upsertedCount: 1
+}
+mydb> db.R_student.find()
+[
+{
+_id: ObjectId("6a3a2a5513af8e781a03e27e"),
+name: 'n1',
+rollno: 14,
+age: 30
+},
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n6', age: 30 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{
+_id: ObjectId("6a3a2c1513af8e781a03e282"),
+name: 'n3',
+city: "A'bad"
+},
+{ _id: ObjectId("6a3a33bdab4bd85d7a2e3e37"), name: 'xyz', age: 32 }
+]
+mydb> db.R_student.deleteOne({name:"n3"})
+{ acknowledged: true, deletedCount: 1 }
+mydb> db.R_student.find()
+[
+{
+_id: ObjectId("6a3a2a5513af8e781a03e27e"),
+name: 'n1',
+rollno: 14,
+age: 30
+},
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 },
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n6', age: 30 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{ _id: ObjectId("6a3a33bdab4bd85d7a2e3e37"), name: 'xyz', age: 32 }
+]
+mydb> db.R_student.find().count()
+5
+mydb>
+
+mydb> db.R_student.find().count({"name"xyz"})
+\Uncaught:
+SyntaxError: Unexpected token (1:33)
+
+> 1 | db.R_student.find().count({"name"xyz"})
+| ^
+2 |
+
+mydb> db.R_student.find().count({name:"xyz"})
+5
+mydb> db.R_student.find().count({name:"n5"})
+5
+mydb> db.R_student.countDocuments()
+5
+mydb> db.R_student.find({name:"xyz"}).count()
+1
+mydb> db.R_student.find().sort({age:-1})
+[
+{ _id: ObjectId("6a3a33bdab4bd85d7a2e3e37"), name: 'xyz', age: 32 },
+{
+_id: ObjectId("6a3a2a5513af8e781a03e27e"),
+name: 'n1',
+rollno: 14,
+age: 30
+},
+{ _id: ObjectId("6a3a2b8a13af8e781a03e280"), name: 'n6', age: 30 },
+{
+_id: ObjectId("6a3a2c1513af8e781a03e281"),
+name: 'n5',
+status: 'active',
+age: 30
+},
+{ _id: ObjectId("6a3a2b8a13af8e781a03e27f"), name: 'n5', age: 21 }
+]
+
+quetion:--
+create a collection name,employee having fields name,age,years of experience and rating 
+1.insert 5 documents in this collection
+2.arange all records in asending order by age
+3.show the name of the employee who is the oldest among all employees
+4.find the name of employee having 10 ratings
+5. delete the record of the employee if the years of experience is 2.
+
+answer:-
+
+mydb> db.employee.insertMany([{name:"n1",age:20,yo:2,rating:3},{name:"n2",age:21,yo:3,rating:4},{name:"n3",age:22,yo:4,rating:5},{name:"n4",age:23,yo:5,rating:6},{name:"n5",age:24,yo:6,rating:7}])
+mydb> db.employee.find().sort({age:1})
+mydb> db.employee.find().sort({age:-1})
+mydb> db.employee.find({rating:10})
+mydb> db.employee.find({rating:10}).count()
+mydb> db.employee.deleteOne({yo:2})
+
+
+comprasion operator:--
+
+1.$eq:  db.people.find({age:{$eq:20}})
+2.$gt:  db.people.find({age:{$gt:20}})
+3.$lt:  db.people.find({age:{$lt:20}})
+4.$get:
+5.$lte:
+6.$ne:
+7.$in: db.people.find({age:{$in:[20,30]}})
+8.$nin:
+
+
+
+
+
+ -->
