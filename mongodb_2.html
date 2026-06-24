@@ -1,0 +1,457 @@
+<!-- write a query all documents age field is not equal to 18. -->
+db.participant.find({age:{$not:{$eq:18}}})
+
+<!-- write a query that returns all the documents where the age field is 22 or more. -->
+db.participant.find({age:{$not:{$gte:22}}})
+db.participant.find({age:{$gte:22}})
+
+<!-- write a query that amtches all the documents where the grade is not in the set of A and B. -->
+db.participant.find({grade:{$not:{$in:["A","B"]}}})
+db.participant.find({grade:{$nin:["A","B"]}})
+
+<!-- write a query to increase stanadrd field value by 5 of the first document. -->
+db.participant.updateOne({name:"n1"},{$inc:{standard:5}})
+
+<!--  write a query to decrement stanadrd field value by 2 of the first document-->
+db.participant.updateOne({name:"n1"},{$inc:{standard:-2}})
+
+<!--  write a query to mulitply standard fiels by 2.-->
+db.participant.updateMany({},{ $mul:{standard:2}})
+
+<!-- write a query increase salary by 10% for all documents. -->
+db.Table1.updateMany({},{$mul:{salary:1.1}})
+
+test> use mydb
+switched to db mydb
+mydb> db.createCollection("participant")
+{ ok: 1 }
+mydb> db.participant.insertMany([{name:"Riya",age:21,grade:A},
+mydb>
+db.participant.insertMany([{name:"Riya",age:21,grade:"A"},{name:"shlesh",age:20,grade:"B"},{name:"vinit",age:19,grade:"C"},{name:"preet",age:20,grade:"A"}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId("6a3b7579eb952eea57555d5a"),
+'1': ObjectId("6a3b7579eb952eea57555d5b"),
+'2': ObjectId("6a3b7579eb952eea57555d5c"),
+'3': ObjectId("6a3b7579eb952eea57555d5d")
+}
+}
+mydb> db.participant.find()
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 19,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 20,
+grade: 'A'
+}
+]
+mydb> db.participant.find({$and:[{name:"riya"},{age:21}]})
+
+mydb> db.participant.find({$and:[{name:"Riya"},{age:21}]})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant. db.R_student.updateMany({name:"n1"},{$set:{age:30}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 0,
+modifiedCount: 0,
+upsertedCount: 0
+}
+mydb> db.participant.updateMany({name:"preet"},{$set:{age:21}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.participant.find()
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 19,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({$and:[{name:"Riya"},{age:21}]})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({$or:[{name:"Riya"},{age:21}]})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({age:{ne:18}})
+
+mydb> db.participant.updateMany({name:"vinit"},{$set:{age:18}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.participant.find()
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({age:{ne:18}})
+
+mydb> db.participant.find({age:{$not:{$eq:18}}})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({age:{$not:{$get:22}}})
+MongoServerError: unknown operator: $get
+mydb> db.participant.find({age:{$not:{$gte:22}}})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({age:{$lt:22}})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({grade:{$not:{$in:["A","B"]}}})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+}
+]
+mydb> db.participant.find({$nor:[{name:"Riya",age:21}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:48)
+
+> 1 | db.participant.find({$nor:[{name:"Riya",age:21}])
+| ^
+2 |
+
+mydb> db.participant.find({$nor:[{name:"Riya",age:21}]})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.participant.find({$nor:[{name:"Riya",age:20}]})
+[
+{
+_id: ObjectId("6a3b7579eb952eea57555d5a"),
+name: 'Riya',
+age: 21,
+grade: 'A'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5b"),
+name: 'shlesh',
+age: 20,
+grade: 'B'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5c"),
+name: 'vinit',
+age: 18,
+grade: 'C'
+},
+{
+_id: ObjectId("6a3b7579eb952eea57555d5d"),
+name: 'preet',
+age: 21,
+grade: 'A'
+}
+]
+mydb> db.createCollection("Table1")
+{ ok: 1 }
+mydb> db.Table1.insertMany([{name:"x",std:1},{name:"y",std:2},{name:"z",std:3},{name:"w",std:4}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId("6a3b7b19eb952eea57555d5e"),
+'1': ObjectId("6a3b7b19eb952eea57555d5f"),
+'2': ObjectId("6a3b7b19eb952eea57555d60"),
+'3': ObjectId("6a3b7b19eb952eea57555d61")
+}
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', std: 1 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', std: 2 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', std: 3 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', std: 4 }
+]
+mydb> db.Table1.updateMany({},{$inc:{std:1}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 4,
+modifiedCount: 4,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', std: 2 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', std: 3 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', std: 4 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', std: 5 }
+]
+mydb> db.Table1.updateMany({name:"x"},{$inc:{std:5}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', std: 7 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', std: 3 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', std: 4 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', std: 5 }
+]
+mydb> db.Table1.updateMany({name:"x"},{$inc:{std:-2}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', std: 5 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', std: 3 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', std: 4 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', std: 5 }
+]
+mydb> db.Table1.updateMany({},{$mul:{std:2}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 4,
+modifiedCount: 4,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', std: 10 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', std: 6 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', std: 8 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', std: 10 }
+]
+mydb> db.Table1.updateMany({},{$rename:{"std":"salary"}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 4,
+modifiedCount: 4,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', salary: 10 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d5f"), name: 'y', salary: 6 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', salary: 8 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', salary: 10 }
+]
+mydb> db.Table1.updateMany({},{$mul:{salary:1.1}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 4,
+modifiedCount: 4,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), name: 'x', salary: 11 },
+{
+_id: ObjectId("6a3b7b19eb952eea57555d5f"),
+name: 'y',
+salary: 6.6000000000000005
+},
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', salary: 8.8 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', salary: 11 }
+]
+mydb> db.Table1.updateOne({salary:{$eq:11}},{$unset:{name:" "}})
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+mydb> db.Table1.find()
+[
+{ _id: ObjectId("6a3b7b19eb952eea57555d5e"), salary: 11 },
+{
+_id: ObjectId("6a3b7b19eb952eea57555d5f"),
+name: 'y',
+salary: 6.6000000000000005
+},
+{ _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', salary: 8.8 },
+{ _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', salary: 11 }
+]
