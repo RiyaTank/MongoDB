@@ -455,3 +455,280 @@ salary: 6.6000000000000005
 { _id: ObjectId("6a3b7b19eb952eea57555d60"), name: 'z', salary: 8.8 },
 { _id: ObjectId("6a3b7b19eb952eea57555d61"), name: 'w', salary: 11 }
 ]
+
+Aggregation:--
+
+works in a pipeline.
+
+collection -> $match -> $group($sum,$min,$max,$avg) -> $sort(+1,-1) -> $project -> result
+
+rename field: $project:{ studentname:"$name",score:"$marks",_id:0}
+
+
+D:\Riya_FSD>mongosh
+Current Mongosh Log ID: 6a435e8e7b0cf2cba3e22641
+Connecting to: mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.3
+Using MongoDB: 6.0.8
+Using Mongosh: 1.10.3
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+The server generated these startup warnings when booting
+2026-06-30T11:36:07.164+05:30: Access control is not enabled for the database. Read and write access to data and
+configuration is unrestricted
+------
+
+test> use mydb
+switched to db mydb
+mydb> db
+mydb
+mydb> db.createCollection("studentdata")
+{ ok: 1 }
+mydb>
+db.studentdata.inserMany([{name:"Niya",city:"A'bad",marks:85},{name:"Riya",city:"surat",marks:70}{name:"Siya",city:"A'bad",marks:90},{name:"Priya",city:"surat",marks:80}])
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:97)
+
+> 1 |
+db.studentdata.inserMany([{name:"Niya",city:"A'bad",marks:85},{name:"Riya",city:"surat",marks:70}{name:"Siya",city:"A'bad",marks:90},{name:"Priya",city:"surat",marks:80}])
+| ^
+2 |
+
+mydb>
+db.studentdata.inserMany([{name:"Niya",city:"A'bad",marks:85},{name:"Riya",city:"surat",marks:70},{name:"Siya",city:"A'bad",marks:90},{name:"Priya",city:"surat",marks:80}])
+TypeError: db.studentdata.inserMany is not a function
+mydb>
+db.studentdata.insertMany([{name:"Niya",city:"A'bad",marks:85},{name:"Riya",city:"surat",marks:70},{name:"Siya",city:"A'bad",marks:90},{name:"Priya",city:"surat",marks:80}])
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId("6a435f677b0cf2cba3e22642"),
+'1': ObjectId("6a435f677b0cf2cba3e22643"),
+'2': ObjectId("6a435f677b0cf2cba3e22644"),
+'3': ObjectId("6a435f677b0cf2cba3e22645")
+}
+}
+mydb> db.studentdata.find()
+[
+{
+_id: ObjectId("6a435f677b0cf2cba3e22642"),
+name: 'Niya',
+city: "A'bad",
+marks: 85
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22643"),
+name: 'Riya',
+city: 'surat',
+marks: 70
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22644"),
+name: 'Siya',
+city: "A'bad",
+marks: 90
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22645"),
+name: 'Priya',
+city: 'surat',
+marks: 80
+}
+]
+mydb> db.studentdata.aggregate([{$match:{city:"surat"}}])
+[
+{
+_id: ObjectId("6a435f677b0cf2cba3e22643"),
+name: 'Riya',
+city: 'surat',
+marks: 70
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22645"),
+name: 'Priya',
+city: 'surat',
+marks: 80
+}
+]
+mydb> db.studentdata.aggregate([{$group:{_id:"$city",totalstudents:{$sum:1}}}])
+[
+{ _id: "A'bad", totalstudents: 2 },
+{ _id: 'surat', totalstudents: 2 }
+]
+mydb> db.studentdata.aggregate([{$group:{_id:"$city",totalmarks:{$avg:"$marks"}}}])
+[
+{ _id: "A'bad", totalmarks: 87.5 },
+{ _id: 'surat', totalmarks: 75 }
+]
+
+
+mydb> db.studentdata.aggregate([{$sort:{marks:-1}}])
+[
+{
+_id: ObjectId("6a435f677b0cf2cba3e22644"),
+name: 'Siya',
+city: "A'bad",
+marks: 90
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22642"),
+name: 'Niya',
+city: "A'bad",
+marks: 85
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22645"),
+name: 'Priya',
+city: 'surat',
+marks: 80
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22643"),
+name: 'Riya',
+city: 'surat',
+marks: 70
+}
+]
+mydb> db.studentdata.aggregate([{$sort:{marks:1}}])
+[
+{
+_id: ObjectId("6a435f677b0cf2cba3e22643"),
+name: 'Riya',
+city: 'surat',
+marks: 70
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22645"),
+name: 'Priya',
+city: 'surat',
+marks: 80
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22642"),
+name: 'Niya',
+city: "A'bad",
+marks: 85
+},
+{
+_id: ObjectId("6a435f677b0cf2cba3e22644"),
+name: 'Siya',
+city: "A'bad",
+marks: 90
+}
+]
+mydb> db.studentdata.aggregate([{$project:{_id:0,name:1}}])
+[
+{ name: 'Niya' },
+{ name: 'Riya' },
+{ name: 'Siya' },
+{ name: 'Priya' }
+]
+
+mydb> db.studentdata.aggregate([{$project:{ studentname:"$name",score:"$marks",_id:0}}])
+[
+{ studentname: 'Niya', score: 85 },
+{ studentname: 'Riya', score: 70 },
+{ studentname: 'Siya', score: 90 },
+{ studentname: 'Priya', score: 80 }
+]
+using aggregation frame work perform the following operations:
+1.select students whose marks are >= 80.
+2. group the selected students by city .
+3.calulate the total marks obtained by students in each city.
+4. sort the result in desending order of total marks.
+5. display only the city name and total marks.
+
+db.studentdata.aggregate([
+{ $match: { marks: { $gte: 80 } } },
+{ $group: { _id: "$city", totalmarks: { $sum: "$marks" } } },
+{ $sort: { totalmarks: -1 } },
+{ $project: {city: "$_id", markstotal: "$totalmarks" } }
+])
+
+1.find customer who spend 50000 - db.customers.find({totalSpent:{$gte:50000}})
+2.find customer with each membership - db.customers.aggregate([{$group:{_id:"$membership"}}])
+3.total spending by state - db.customers.aggregate([{$group:{_id:"$state",totalSpent:{$sum:"$totalSpent"}}}])
+4.sort customers by total spending highest first -
+db.customers.aggregate([{$group:{_id:"$state",totalSpent:{$sum:"$totalSpent"}}},{$sort:{totalSpent:-1}}])
+5.gold members only and display only name -
+db.customers.aggregate([{$match:{membership:"Gold"}},{$project:{customerName:1}}])
+6.total sales in gujarat.
+db.customers.aggregate([{$match:{state:"Gujarat"}},{$group:{_id:"$state",totalSales:{$sum:"$totalSpent"}}}])
+7.gold memebers-> total spent by state->sort(desending order)totalsales->project(state,totalSales)
+db.customers.aggregate([{$match:{membership:"Gold"}},{$group:{_id:"$state",totalSales:{$sum:"$totalSpent"}}},{$sort:{totalSales:-1}},{$project:{state:1,totalSales:1}}])
+
+
+db.orders.insertMany([
+{
+_id: 1,
+person: "Rohan",
+product: "Laptop",
+category: "Electronics",
+amount: 65000
+},
+{
+_id: 2,
+person: "Ananya",
+product: "Smartphone",
+category: "Electronics",
+amount: 35000
+},
+{
+_id: 3,
+person: "Kabir",
+product: "Office Chair",
+category: "Furniture",
+amount: 12000
+},
+{
+_id: 4,
+person: "Meera",
+product: "Running Shoes",
+category: "Footwear",
+amount: 4500
+},
+{
+_id: 5,
+person: "Aarav",
+product: "Trimmer",
+category: "Electronics",
+amount: 2500
+},
+{
+_id: 6,
+person: "Riya",
+product: "Dining Table",
+category: "Furniture",
+amount: 28000
+},
+{
+_id: 7,
+person: "Dev",
+product: "Backpack",
+category: "Accessories",
+amount: 3200
+}
+]);
+
+1. calculate the average order amount for each category sort the result in desending order in average amount and display
+only category and average amount
+mydb>
+db.orders.aggregate([{$group:{_id:"$category",averageAmount:{$avg:"$amount"}}},{$sort:{averageAmount:-1}},{$project:{category:1,averageAmount:1}}])
+[
+{ category: 'Electronics', averageAmount: 40000 },
+{ category: 'Footwear', averageAmount: 2250 },
+{ category: 'Furniture', averageAmount: 19000 },
+{ category: 'Accessories', averageAmount: 1600 }
+]
+
+2.find the highest oreder amount for each category sort the result in desending order of highest order amount and
+display only the category and highest order amount.
+mydb>
+db.orders.aggregate([{$group:{_id:"$category",highestAmount:{$max:"$amount"}}},{$sort:{highestAmount:-1}},{$project:{category:1,highestAmount:1}}])
+[
+{ category: 'Electronics', highestAmount: 65000 },
+{ category: 'Footwear', highestAmount: 4500 },
+{ category: 'Furniture', highestAmount: 28000 },
+{ category: 'Accessories', highestAmount: 3200 }
+]
